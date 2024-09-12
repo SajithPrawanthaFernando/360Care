@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
+  useWindowDimensions,
+  Image,
 } from "react-native";
-
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+import logotrans from "../assets/images/logotrans.png";
+import { useNavigation } from "@react-navigation/native";
 
 const LoginPage = ({
   email,
@@ -19,158 +19,143 @@ const LoginPage = ({
   handleAuthentication,
   setCurrentPage,
 }) => {
-  const [isListening, setIsListening] = useState(false);
-  const [voiceText, setVoiceText] = useState("");
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+  const navigation = useNavigation();
 
-  // useEffect(() => {
-  //   if (Voice) {
-  //     Voice.onSpeechStart = onSpeechStartHandler;
-  //     Voice.onSpeechEnd = onSpeechEndHandler;
-  //     Voice.onSpeechResults = onSpeechResultsHandler;
-  //     return () => {
-  //       Voice.removeAllListeners();
-  //     };
-  //   } else {
-  //     console.warn("Voice module is not available.");
-  //   }
-  // }, []);
-
-  // const onSpeechStartHandler = (e) => {
-  //   console.log("Speech started");
-  // };
-
-  // const onSpeechEndHandler = (e) => {
-  //   console.log("Speech ended");
-  // };
-
-  // const onSpeechResultsHandler = (e) => {
-  //   console.log("Speech results:", e.value);
-  //   setVoiceText(e.value[0]);
-  // };
-
-  // const startListening = async () => {
-  //   try {
-  //     await Voice.start("en-US");
-  //     setIsListening(true);
-  //   } catch (e) {
-  //     console.error("Error starting voice recognition:", e);
-  //   }
-  // };
-
-  // const stopListening = async () => {
-  //   try {
-  //     await Voice.stop();
-  //     setIsListening(false);
-  //   } catch (e) {
-  //     console.error("Error stopping voice recognition:", e);
-  //   }
-  // };
+  const handleLogin = async () => {
+    if (typeof handleAuthentication === "function") {
+      await handleAuthentication(); // Await the function to ensure Firebase authentication happens before navigating
+      navigation.navigate("Tab");
+    } else {
+      console.error("handleAuthentication is not a function");
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.authContainer}>
-        <Text style={styles.appTitle}>My App</Text>
+    <View
+      style={[styles.container, { width: windowWidth, height: windowHeight }]}
+    >
+      <Image source={logotrans} style={styles.logo} />
+      <Text style={styles.logoText}>360care</Text>
+      <Text style={styles.subtitle}>Let’s get started!</Text>
+      <Text style={styles.description}>Login to Stay healthy and fit</Text>
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.inputLabel}>Email</Text>
         <TextInput
           style={styles.input}
           value={email}
           onChangeText={setEmail}
-          placeholder="Email"
+          placeholder="Enter your email"
           autoCapitalize="none"
-          placeholderTextColor="#6c757d"
+          placeholderTextColor="#9ca3af"
         />
+        <Text style={styles.inputLabel}>Password</Text>
         <TextInput
           style={styles.input}
           value={password}
           onChangeText={setPassword}
-          placeholder="Password"
+          placeholder="Enter your password"
           secureTextEntry
-          placeholderTextColor="#6c757d"
+          placeholderTextColor="#9ca3af"
         />
-        <TouchableOpacity
-          onPress={() => console.log("Forgot Password Pressed")}
-        >
-          <Text style={styles.forgotPasswordText}>Forgot Password ?</Text>
+      </View>
+
+      <TouchableOpacity onPress={() => console.log("Forgot Password Pressed")}>
+        <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <Text style={styles.loginButtonText}>Login</Text>
+      </TouchableOpacity>
+
+      <View style={styles.bottomContainer}>
+        <TouchableOpacity onPress={() => setCurrentPage("signup")}>
+          <Text style={styles.toggleText}>
+            Don't have an account?{" "}
+            <Text style={styles.signUpText}>Sign Up</Text>
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.signInButton}
-          onPress={handleAuthentication}
-        >
-          <Text style={styles.signInButtonText}>Sign In</Text>
-        </TouchableOpacity>
-        <View style={styles.bottomContainer}>
-          <TouchableOpacity onPress={() => setCurrentPage("signup")}>
-            <Text style={styles.toggleText}>
-              Don't have an account?{" "}
-              <Text style={styles.signUpText}>Sign Up</Text>
-            </Text>
-          </TouchableOpacity>
-        </View>
       </View>
     </View>
   );
 };
 
-const { width } = Dimensions.get("window");
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: windowWidth,
-    height: windowHeight,
-    backgroundColor: "#343a40",
+    backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
+    padding: 23,
   },
-  authContainer: {
-    flex: 1,
-    width: "90%",
-    backgroundColor: "#343a40",
-    padding: 16,
-    borderRadius: 8,
-    justifyContent: "center",
+  logo: {
+    width: 110,
+    height: 100,
+    marginBottom: 20,
   },
-  appTitle: {
+  logoText: {
+    fontSize: 36,
+    fontWeight: "bold",
+    color: "#1434A4",
+    marginBottom: 10,
+  },
+  subtitle: {
     fontSize: 24,
-    color: "#fff",
-    textAlign: "center",
-    marginBottom: 120,
+    fontWeight: "bold",
+    color: "#000",
+    marginBottom: 5,
+  },
+  description: {
+    fontSize: 16,
+    color: "#7d7d7d",
+    marginBottom: 40,
+  },
+  inputContainer: {
+    width: "100%",
+  },
+  inputLabel: {
+    fontSize: 16,
+    color: "#000",
+    marginBottom: 5,
   },
   input: {
-    height: 60,
-    backgroundColor: "#495057",
-    color: "#fff",
-    marginBottom: 16,
-    paddingHorizontal: 8,
-    borderRadius: 10,
+    height: 50,
+    color: "#000",
+    paddingHorizontal: 15,
+    borderRadius: 25,
+    marginBottom: 15,
+    borderColor: "#4285F4",
+    borderWidth: 1,
   },
   forgotPasswordText: {
-    color: "#adb5bd",
+    color: "#4285F4",
     textAlign: "right",
-    marginBottom: 16,
+    width: "100%",
+    marginBottom: 20,
+    fontWeight: "bold",
   },
-  signInButton: {
-    height: 50,
-    backgroundColor: "#ffc107",
-    paddingVertical: 12,
-    borderRadius: 10,
-    textAlign: "center",
+  loginButton: {
+    width: "100%",
+    backgroundColor: "#4285F4",
+    padding: 15,
+    borderRadius: 25,
     alignItems: "center",
-    marginBottom: 16,
+    marginTop: 20,
   },
-  signInButtonText: {
-    color: "#212529",
-    fontSize: 16,
+  loginButtonText: {
+    color: "#fff",
+    fontSize: 18,
     fontWeight: "bold",
   },
   bottomContainer: {
-    marginTop: 200,
-    alignItems: "center",
+    marginTop: 20,
   },
   toggleText: {
     color: "#adb5bd",
   },
   signUpText: {
-    color: "#ffc107",
+    color: "#4285F4",
   },
 });
 

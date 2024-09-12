@@ -1,28 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Dimensions } from "react-native";
+import { getAuth } from "firebase/auth"; // Import Firebase Auth
+import { getFirestore, doc, getDoc } from "firebase/firestore"; // Import Firestore
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+const Profile = ({ handleLogout, navigateBack }) => {
+  const [userData, setUserData] = useState(null);
+  const auth = getAuth();
+  const db = getFirestore();
 
-const Profile = ({ user, handleAuthentication, navigateBack }) => {
-  console.log(user);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser; // Get current user
+      if (user) {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          setUserData(userDoc.data()); // Set user data if exists
+        } else {
+          console.log("No user data found!");
+        }
+      }
+    };
+
+    fetchUserData(); // Fetch data when Profile page loads
+  }, [auth, db]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>My App</Text>
-      {user ? (
+      {userData ? (
         <>
           <View style={styles.infoContainer}>
             <Text style={styles.infoLabel}>Name</Text>
-            <Text style={styles.infoText}>{user.name}</Text>
+            <Text style={styles.infoText}>{userData.name}</Text>
           </View>
           <View style={styles.infoContainer}>
             <Text style={styles.infoLabel}>Email</Text>
-            <Text style={styles.infoText}>{user.email}</Text>
+            <Text style={styles.infoText}>{userData.email}</Text>
           </View>
           <TouchableOpacity
             style={styles.logoutButton}
-            onPress={handleAuthentication}
+            onPress={handleLogout} // Use handleLogout for logout
           >
             <Text style={styles.logoutButtonText}>Log out</Text>
           </TouchableOpacity>
@@ -40,10 +57,8 @@ const Profile = ({ user, handleAuthentication, navigateBack }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: windowWidth,
-    height: windowHeight,
     margin: 10,
-    backgroundColor: "#343a40",
+    backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -75,7 +90,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffc107",
     paddingVertical: 12,
     borderRadius: 10,
-    textAlign: "center",
     alignItems: "center",
     marginTop: 16,
   },

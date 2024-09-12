@@ -1,188 +1,137 @@
-import React, { useState, useEffect } from "react";
-import { ScrollView, Text, View, StyleSheet, Alert } from "react-native";
-import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-} from "firebase/auth";
-import { getFirestore, setDoc, doc, getDoc } from "firebase/firestore";
-import LoginPage from "../components/LoginPage";
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import HomeScreen from "../components/HomeScreen";
+import SplashScreen from "../components/SplashSreen";
+import OnboardingScreen1 from "../components/OnboardingScreen1";
+import OnboardingScreen2 from "../components/OnboardingScreen2";
+import OnboardingScreen3 from "../components/OnboardingScreen3";
+import GetStarted from "../components/GetStarted";
 import SignUpPage from "../components/SignUpPage";
-import AuthenticatedScreen from "../components/CharactersPage";
+import LoginPage from "../components/LoginPage";
+import Diet from "../components/DietPlanning/Diet";
+import Doctor from "../components/DoctorScheduling/Doctor";
+import Sleep from "../components/SleepTracking/Sleep";
+import DailyTips from "../components/Tipsmanaging/DailyTips";
 import Profile from "../components/Profile";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBmM5w7JJSAqAC3WCKCykrsdzkwhH-gIxQ",
-  authDomain: "loginapp-1c095.firebaseapp.com",
-  projectId: "loginapp-1c095",
-  storageBucket: "loginapp-1c095.appspot.com",
-  messagingSenderId: "398823817487",
-  appId: "1:398823817487:web:d8327617a3fe4c8a05be7a",
-  measurementId: "G-R03EJX5M8G",
-};
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-const HomeScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [cpassword, setcPassword] = useState("");
-  const [user, setUser] = useState(null);
-  const [userData, setUserData] = useState(null);
-  const [currentPage, setCurrentPage] = useState("login");
-  const [showStartScreen, setShowStartScreen] = useState(true);
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-      if (user) {
-        await fetchUserData(user.uid);
-        setCurrentPage("characters");
-      } else {
-        setCurrentPage("login");
-      }
-    });
-
-    setTimeout(() => {
-      setShowStartScreen(false);
-    }, 3000);
-
-    return () => unsubscribe();
-  }, [auth]);
-
-  const fetchUserData = async (uid) => {
-    console.log("Fetching user data for UID:", uid);
-    const userDoc = await getDoc(doc(db, "users", uid));
-
-    if (userDoc.exists()) {
-      const userData = userDoc.data();
-      console.log("User data found:", userData);
-      setUserData(userData);
-      setUser(userData);
-    } else {
-      console.log("No such user document!");
-    }
-  };
-
-  const handleAuthentication = async () => {
-    try {
-      if (user) {
-        console.log("User logged out successfully!");
-        await signOut(auth);
-        setCurrentPage("login");
-      } else {
-        if (currentPage === "login") {
-          await signInWithEmailAndPassword(auth, email, password);
-          console.log("User signed in successfully!");
-        } else if (currentPage === "signup") {
-          if (password === cpassword) {
-            const userCredential = await createUserWithEmailAndPassword(
-              auth,
-              email,
-              password
-            );
-            const user = userCredential.user;
-
-            await setDoc(doc(db, "users", user.uid), {
-              name: name,
-              email: email,
-            });
-
-            console.log("User created successfully!");
-          } else {
-            Alert.alert("Error", "Passwords do not match.");
-            return;
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Authentication error:", error.message);
-      Alert.alert("Authentication Error", error.message);
-    }
-  };
-
-  const handleNavigateToProfile = async () => {
-    if (user) {
-      await fetchUserData(user.uid);
-    }
-    setCurrentPage("profile");
-  };
-
-  if (showStartScreen) {
-    return (
-      <View style={styles.startScreen}>
-        <Text style={styles.appTitle}>My App</Text>
-      </View>
-    );
-  }
-
+function Tabbar() {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {currentPage === "login" && (
-        <LoginPage
-          email={email}
-          setEmail={setEmail}
-          password={password}
-          setPassword={setPassword}
-          handleAuthentication={handleAuthentication}
-          setCurrentPage={setCurrentPage}
-        />
-      )}
-      {currentPage === "signup" && (
-        <SignUpPage
-          name={name}
-          setName={setName}
-          email={email}
-          setEmail={setEmail}
-          password={password}
-          setPassword={setPassword}
-          cpassword={cpassword}
-          setcPassword={setcPassword}
-          handleAuthentication={handleAuthentication}
-          setCurrentPage={setCurrentPage}
-        />
-      )}
-      {currentPage === "characters" && (
-        <AuthenticatedScreen
-          user={user}
-          handleAuthentication={handleAuthentication}
-          navigateToProfile={handleNavigateToProfile}
-        />
-      )}
-      {currentPage === "profile" && (
-        <Profile
-          user={userData}
-          handleAuthentication={handleAuthentication}
-          navigateBack={() => setCurrentPage("characters")}
-        />
-      )}
-    </ScrollView>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          switch (route.name) {
+            case "Diet":
+              iconName = focused ? "nutrition" : "nutrition-outline";
+              break;
+            case "DailyTips":
+              iconName = focused ? "list-circle" : "list-circle-outline";
+              break;
+            case "Doctor":
+              iconName = focused ? "medkit" : "medkit-outline";
+              break;
+            case "Sleep":
+              iconName = focused ? "bed" : "bed-outline";
+              break;
+            case "Profile":
+              iconName = focused ? "person" : "person-outline";
+              break;
+            default:
+              iconName = "help-circle";
+          }
+
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: "tomato",
+        tabBarInactiveTintColor: "gray",
+      })}
+    >
+      <Tab.Screen
+        name="Diet"
+        component={Diet}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="DailyTips"
+        component={DailyTips}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Doctor"
+        component={Doctor}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Sleep"
+        component={Sleep}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{ headerShown: false }}
+      />
+    </Tab.Navigator>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-    backgroundColor: "#f0f0f0",
-  },
-  startScreen: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#343a40",
-  },
-  appTitle: {
-    fontSize: 24,
-    color: "#fff",
-  },
-});
+function App() {
+  return (
+    <Stack.Navigator initialRouteName="Splash">
+      <Stack.Screen
+        name="Splash"
+        component={SplashScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Onboarding1"
+        component={OnboardingScreen1}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Onboarding2"
+        component={OnboardingScreen2}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Onboarding3"
+        component={OnboardingScreen3}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="GetStarted"
+        component={GetStarted}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="signup"
+        component={SignUpPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="login"
+        component={LoginPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Tab"
+        component={Tabbar}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+}
 
-export default HomeScreen;
+export default App;

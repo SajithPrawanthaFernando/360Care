@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import logotrans from "../assets/images/logotrans.png";
 import { useNavigation } from "@react-navigation/native";
+
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
@@ -24,12 +25,49 @@ const SignUpPage = ({
   cpassword,
   setcPassword,
   handleAuthentication,
-  setCurrentPage,
 }) => {
   const navigation = useNavigation();
-  const handleSignUp = () => {
+
+  // State to handle error messages
+  const [error, setError] = useState("");
+
+  const validateInput = () => {
+    if (!name || !email || !password || !cpassword) {
+      setError("All fields are required.");
+      return false;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      return false;
+    }
+
+    // Password validation
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError(
+        "Password must be at least 8 characters long, with one uppercase letter, one lowercase letter, and one special character."
+      );
+      return false;
+    }
+
+    // Confirm password validation
+    if (password !== cpassword) {
+      setError("Passwords do not match.");
+      return false;
+    }
+
+    setError("");
+    return true;
+  };
+
+  const handleSignUp = async () => {
+    if (!validateInput()) return;
+
     if (typeof handleAuthentication === "function") {
-      handleAuthentication();
+      await handleAuthentication(navigation, "signup"); // Pass current page as 'signup'
       navigation.navigate("Tab");
     } else {
       console.error("handleAuthentication is not a function");
@@ -42,6 +80,9 @@ const SignUpPage = ({
       <Text style={styles.appTitle}>360care</Text>
       <Text style={styles.subtitle}>Let’s get started!</Text>
       <Text style={styles.description}>Sign Up to Stay healthy and fit</Text>
+
+      {/* Display error message if any */}
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       <View style={styles.inputContainer}>
         <TextInput
@@ -83,7 +124,7 @@ const SignUpPage = ({
       </TouchableOpacity>
 
       <View style={styles.bottomContainer}>
-        <TouchableOpacity onPress={() => setCurrentPage("login")}>
+        <TouchableOpacity onPress={() => navigation.navigate("login")}>
           <Text style={styles.toggleText}>
             Already have an account?{" "}
             <Text style={styles.signInText}>Sign In</Text>
@@ -93,8 +134,6 @@ const SignUpPage = ({
     </View>
   );
 };
-
-const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -111,7 +150,6 @@ const styles = StyleSheet.create({
     height: 100,
     marginBottom: 20,
   },
-
   appTitle: {
     fontSize: 30,
     color: "#1434A4", // Blue color
@@ -164,6 +202,10 @@ const styles = StyleSheet.create({
   },
   signInText: {
     color: "#4285F4", // Blue for the sign-in text
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 20,
   },
 });
 

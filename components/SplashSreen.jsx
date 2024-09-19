@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 176,
-    height: 158, // Adjust based on your needs
+    height: 158,
     marginBottom: 20,
   },
   appName: {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -22,10 +22,34 @@ const LoginPage = ({
   const { width: windowWidth, height: windowHeight } = useWindowDimensions();
   const navigation = useNavigation();
 
+  // State to handle error messages
+  const [error, setError] = useState("");
+
+  const validateInput = () => {
+    if (!email || !password) {
+      setError("Both fields are required.");
+      return false;
+    }
+    // Simple email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address.");
+      return false;
+    }
+    // Password validation
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      return false;
+    }
+    setError("");
+    return true;
+  };
+
   const handleLogin = async () => {
+    if (!validateInput()) return;
+
     if (typeof handleAuthentication === "function") {
-      await handleAuthentication(); // Await the function to ensure Firebase authentication happens before navigating
-      navigation.navigate("Tab");
+      await handleAuthentication(navigation, "login"); // Pass current page as 'login'
     } else {
       console.error("handleAuthentication is not a function");
     }
@@ -39,6 +63,9 @@ const LoginPage = ({
       <Text style={styles.logoText}>360care</Text>
       <Text style={styles.subtitle}>Let’s get started!</Text>
       <Text style={styles.description}>Login to Stay healthy and fit</Text>
+
+      {/* Display error message if any */}
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       <View style={styles.inputContainer}>
         <Text style={styles.inputLabel}>Email</Text>
@@ -70,7 +97,7 @@ const LoginPage = ({
       </TouchableOpacity>
 
       <View style={styles.bottomContainer}>
-        <TouchableOpacity onPress={() => setCurrentPage("signup")}>
+        <TouchableOpacity onPress={() => navigation.navigate("signup")}>
           <Text style={styles.toggleText}>
             Don't have an account?{" "}
             <Text style={styles.signUpText}>Sign Up</Text>
@@ -156,6 +183,10 @@ const styles = StyleSheet.create({
   },
   signUpText: {
     color: "#4285F4",
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 20,
   },
 });
 

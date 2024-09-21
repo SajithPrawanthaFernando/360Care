@@ -23,9 +23,9 @@ const OnboardingScreen3 = () => {
       </Text>
 
       <View style={styles.paginationContainer}>
-        <View style={[styles.paginationDot, { backgroundColor: "#0000FF" }]} />
         <View style={styles.paginationDot} />
         <View style={styles.paginationDot} />
+        <View style={[styles.paginationDot, { backgroundColor: "#007AFF" }]} />
       </View>
 
       <TouchableOpacity

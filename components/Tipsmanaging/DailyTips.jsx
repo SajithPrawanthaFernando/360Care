@@ -14,15 +14,27 @@ import bottle from "../../assets/images/bottle.jpg";
 import bicycle from "../../assets/images/bicycle.png";
 import sleep from "../../assets/images/sleep.png";
 import food from "../../assets/images/food.png";
+import exercise from "../../assets/images/exercise.png";
+import flower from "../../assets/images/flower.png";
+import heart from "../../assets/images/heart.png";
+import tree from "../../assets/images/tree.png";
 import { db } from "../../hooks/firebaseConfig";
 import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { format } from "date-fns"; // Import date-fns for date formatting
 
-const images = [bottle, bicycle, sleep, food, bulb];
+const images = [bottle, bicycle, sleep, food, exercise, flower, heart, tree];
 
 const getRandomImage = () => {
   return images[Math.floor(Math.random() * images.length)];
+};
+
+const focusAreaMapping = {
+  1: "nutrition",
+  2: "mental_health",
+  3: "chronic_disease",
+  4: "fitness",
+  5: "stress_management",
 };
 
 const DailyTips = () => {
@@ -33,22 +45,21 @@ const DailyTips = () => {
   const auth = getAuth();
   const userId = auth.currentUser?.uid;
 
-  // Ref to keep track of focus areas without causing re-renders
   const focusAreasRef = useRef(focusAreas);
 
   useEffect(() => {
     const fetchAndUpdateTips = async () => {
       if (!userId) return;
 
-      const today = format(new Date(), "yyyy-MM-dd"); // Get today's date in yyyy-MM-dd format
+      const today = format(new Date(), "yyyy-MM-dd");
 
       try {
-        // Fetch focus areas
+        // Fetch selected focus areas
         const focusDocRef = doc(db, "users", userId, "focusAreas", "selected");
         const focusDocSnap = await getDoc(focusDocRef);
         if (focusDocSnap.exists()) {
-          focusAreasRef.current = focusDocSnap.data(); // Update ref
-          setFocusAreas(focusDocSnap.data()); // Update state
+          focusAreasRef.current = focusDocSnap.data();
+          setFocusAreas(focusDocSnap.data());
         }
 
         // Fetch today's tip
@@ -57,16 +68,26 @@ const DailyTips = () => {
 
         let newTip = null;
         if (!todayDocSnap.exists() || todayDocSnap.data().date !== today) {
-          // Fetch tips based on focus areas or general tips
-          const tipsCollection =
-            focusAreasRef.current &&
-            Object.values(focusAreasRef.current).some(Boolean)
-              ? "focusTips"
-              : "general_tips"; // Use a default collection if no focus areas
+          // Determine if focus areas are selected
+          const selectedFocusAreas = Object.entries(focusAreasRef.current)
+            .filter(([key, value]) => value)
+            .map(([key]) => focusAreaMapping[key]);
 
-          const tipsDocRef = doc(db, "healthTips", tipsCollection);
+          let tipsDocRef;
+          if (selectedFocusAreas.length > 0) {
+            // Randomly select one of the user's focus areas
+            const randomFocusArea =
+              selectedFocusAreas[
+                Math.floor(Math.random() * selectedFocusAreas.length)
+              ];
+            tipsDocRef = doc(db, "healthTips", randomFocusArea);
+          } else {
+            // Fallback to general tips if no focus area is selected
+            tipsDocRef = doc(db, "healthTips", "general_tips");
+          }
+
+          // Fetch a tip from the chosen collection
           const tipsDocSnap = await getDoc(tipsDocRef);
-
           if (tipsDocSnap.exists()) {
             const tipsArray = tipsDocSnap.data().tips;
             newTip = tipsArray[Math.floor(Math.random() * tipsArray.length)];
@@ -85,7 +106,7 @@ const DailyTips = () => {
 
           // Set the new tip as today's tip
           if (newTip) {
-            const newTipImage = getRandomImage(); // Generate a new image
+            const newTipImage = getRandomImage();
             await setDoc(
               todayDocRef,
               {
@@ -94,18 +115,18 @@ const DailyTips = () => {
                 image: newTipImage,
               },
               { merge: true }
-            ); // Automatically create the document if it doesn't exist
+            );
             setTodayTip({ tip: newTip, image: newTipImage });
           }
         } else {
-          // If the date is today, use the existing tip
+          // Use existing today's tip
           setTodayTip({
             tip: todayDocSnap.data().tip,
             image: todayDocSnap.data().image,
           });
         }
 
-        // Fetch the previous tips
+        // Fetch previous tips
         const previousTipsDocRef = doc(
           db,
           "users",
@@ -118,10 +139,8 @@ const DailyTips = () => {
           const previousTipsArray = previousTipsDocSnap.data().tips || [];
           setPreviousTips(previousTipsArray);
         } else {
-          // Create the document if it doesn't exist
-          await setDoc(previousTipsDocRef, {
-            tips: [],
-          });
+          // Create previous tips document if it doesn't existts
+          await setDoc(previousTipsDocRef, { tips: [] });
         }
       } catch (error) {
         console.error("Error fetching or updating tips:", error);

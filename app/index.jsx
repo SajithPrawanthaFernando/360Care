@@ -29,6 +29,7 @@ import Profile from "../components/Profile";
 import FocusGoalsScreen from "../components/Tipsmanaging/FocusGoalsScreen";
 import ProgressScreen from "../components/Tipsmanaging/ProgressScreen";
 import MilestonesScreen from "../components/Tipsmanaging/MilestonesScreen";
+import AdminHome from "../components/Admin/AdminHome";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -171,10 +172,18 @@ function App() {
       } else {
         if (currentPage === "login") {
           await signInWithEmailAndPassword(auth, email, password);
-          console.log("User signed in successfully!");
-          navigation.navigate("Tab");
-          setEmail("");
-          setPassword("");
+
+          if (email == "admin@gmail.com" && password == "Qw12345@") {
+            console.log("Admin signed in successfully!");
+            navigation.navigate("AdminHome");
+            setEmail("");
+            setPassword("");
+          } else {
+            console.log("User signed in successfully!");
+            navigation.navigate("Tab");
+            setEmail("");
+            setPassword("");
+          }
         } else if (currentPage === "signup") {
           if (password === cpassword) {
             const userCredential = await createUserWithEmailAndPassword(
@@ -266,6 +275,11 @@ function App() {
         component={Tabbar}
         options={{ headerShown: false }}
         initialParams={{ user }}
+      />
+      <Stack.Screen
+        name="AdminHome"
+        component={AdminHome}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );

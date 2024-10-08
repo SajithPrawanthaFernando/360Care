@@ -9,6 +9,7 @@ import {
   Switch,
   TouchableOpacity,
   ImageBackground,
+  Image,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -16,6 +17,11 @@ import focusImage from "../../assets/images/focus.png";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { db } from "../../hooks/firebaseConfig";
+import nutrition from "../../assets/images/nutrition.png";
+import mentalhealth from "../../assets/images/mentalhealth.png";
+import chronicdisease from "../../assets/images/chronicdisease.png";
+import fitness from "../../assets/images/fitness.png";
+import stress from "../../assets/images/stress.png";
 
 const FocusGoalsScreen = () => {
   const navigation = useNavigation();
@@ -83,38 +89,39 @@ const FocusGoalsScreen = () => {
       id: "1",
       title: "Nutrition",
       description: "Boost your health with balanced meals.",
-      icon: "food",
+      icon: nutrition,
     },
     {
       id: "2",
       title: "Mental Health",
       description: "Support your mental well-being daily.",
-      icon: "emoticon-happy",
+      icon: mentalhealth,
     },
     {
       id: "3",
       title: "Chronic Disease",
       description: "Manage chronic conditions effectively.",
-      icon: "pill",
+      icon: chronicdisease,
     },
     {
       id: "4",
       title: "Fitness",
       description: "Enhance your physical fitness and stamina.",
-      icon: "run",
+      icon: fitness,
     },
     {
       id: "5",
       title: "Stress Management",
       description: "Develop techniques to manage and reduce stress.",
-      icon: "sleep",
+      icon: stress,
     },
   ];
 
   const renderFocusArea = ({ item }) => (
     <View style={styles.card}>
       <View style={styles.focusAreaItem}>
-        <MaterialCommunityIcons name={item.icon} size={40} color="#ff8a65" />
+        <Image source={item.icon} style={styles.tipsImage} />
+
         <View style={{ flex: 1, marginLeft: 10 }}>
           <Text style={styles.focusAreaTitle}>{item.title}</Text>
           <Text style={styles.focusAreaDescription}>{item.description}</Text>
@@ -259,6 +266,13 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     elevation: 4,
+  },
+  tipsImage: {
+    width: 50,
+    height: 50,
+    resizeMode: "cover",
+    borderRadius: 8,
+    marginRight: 4,
   },
 });
 

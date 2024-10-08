@@ -20,6 +20,7 @@ const MilestonesScreen = () => {
   const [completedTasks, setCompletedTasks] = useState(0);
   const [progress, setProgress] = useState(0);
   const [earnedBadges, setEarnedBadges] = useState([]);
+  const [showCongratulations, setShowCongratulations] = useState(false); // New state for congratulatory message
   const navigation = useNavigation();
   const db = getFirestore();
 
@@ -66,6 +67,13 @@ const MilestonesScreen = () => {
 
         const completedCount = querySnapshot.size;
         setCompletedTasks(completedCount);
+
+        // Check if completed tasks exceed 20
+        if (completedCount >= 20) {
+          setShowCongratulations(true); // Show the congratulatory message
+        } else {
+          setShowCongratulations(false); // Hide the message if count is 20 or less
+        }
 
         // Calculate progress
         const totalTasks =
@@ -134,6 +142,13 @@ const MilestonesScreen = () => {
           </Text>
         )}
       </View>
+
+      {/* Congratulatory Message */}
+      {showCongratulations && (
+        <Text style={styles.congratulationsText}>
+          Congratulations! You have earned all the badges!
+        </Text>
+      )}
 
       {/* Progress Bar */}
       <View style={styles.progressSection}>
@@ -251,6 +266,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 10,
     right: 10,
+  },
+  congratulationsText: {
+    fontSize: 18,
+    color: "#4a90e2",
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 20,
   },
 });
 

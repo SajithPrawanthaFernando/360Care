@@ -25,13 +25,13 @@ import progress from "../../assets/images/progress.png";
 
 const ProgressScreen = () => {
   const navigation = useNavigation();
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState([]); // Tasks to display
+  const [mergedTasks, setMergedTasks] = useState([]); // Original tasks
   const [progressPercentage, setProgressPercentage] = useState(0);
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        // Get the current user ID from Firebase Authentication
         const userId = auth.currentUser?.uid;
         if (!userId) {
           console.error("No user is logged in.");
@@ -61,20 +61,15 @@ const ProgressScreen = () => {
           tasksMap.set(task.id, { ...tasksMap.get(task.id), ...task })
         );
 
-        const mergedTasks = Array.from(tasksMap.values());
+        const allTasks = Array.from(tasksMap.values());
 
-        // Filter tasks to show only unfinished ones
-        const unfinishedTasks = mergedTasks.filter((task) => !task.completed);
+        // Set merged tasks and filter for unfinished ones
+        setMergedTasks(allTasks);
+        const unfinishedTasks = allTasks.filter((task) => !task.completed);
         setTasks(unfinishedTasks);
 
-        // Calculate progress percentage
-        const totalTasks = mergedTasks.length;
-        const completedTasks = mergedTasks.filter(
-          (task) => task.completed
-        ).length;
-        const percentage =
-          totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
-        setProgressPercentage(percentage);
+        // Calculate progress percentage based on all tasks
+        calculateProgress(allTasks);
       } catch (error) {
         console.error("Error fetching tasks: ", error);
       }
@@ -83,25 +78,15 @@ const ProgressScreen = () => {
     fetchTasks();
   }, []);
 
-  const renderTaskItem = ({ item }) => (
-    <View style={styles.card}>
-      <View style={styles.taskItem}>
-        <MaterialCommunityIcons name={item.icon} size={40} color="#ff8a65" />
-        <View style={{ flex: 1, marginLeft: 10 }}>
-          <Text style={styles.taskTitle}>{item.title}</Text>
-        </View>
-        <Switch
-          thumbColor={item.completed ? "#4a90e2" : "#d9d9d9"} // Color of the thumb when on and off
-          value={item.completed}
-          onValueChange={() => handleToggleTask(item.id, item.completed)}
-        />
-      </View>
-    </View>
-  );
+  const calculateProgress = (tasks) => {
+    const totalTasks = tasks.length;
+    const completedTasks = tasks.filter((task) => task.completed).length;
+    const percentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+    setProgressPercentage(percentage);
+  };
 
   const handleToggleTask = async (taskId, currentStatus) => {
     try {
-      // Get the current user ID from Firebase Authentication
       const userId = auth.currentUser?.uid;
       if (!userId) {
         console.error("No user is logged in.");
@@ -111,16 +96,12 @@ const ProgressScreen = () => {
       const taskRef = doc(db, `users/${userId}/taskcollection/${taskId}`);
       const taskDoc = await getDoc(taskRef);
 
-      let taskData;
-
       if (!taskDoc.exists()) {
-        // If the task document does not exist, create it
         const globalTaskRef = doc(db, `tasks/${taskId}`);
         const globalTaskDoc = await getDoc(globalTaskRef);
 
         if (globalTaskDoc.exists()) {
-          // Use global task data if available
-          taskData = globalTaskDoc.data();
+          const taskData = globalTaskDoc.data();
           await setDoc(taskRef, {
             ...taskData,
             completed: !currentStatus,
@@ -130,31 +111,37 @@ const ProgressScreen = () => {
           return;
         }
       } else {
-        // If the task document exists, update it
-        taskData = taskDoc.data();
         await updateDoc(taskRef, { completed: !currentStatus });
       }
 
       // Update local tasks state after Firestore update is successful
-      const updatedTasks = tasks.map((task) =>
+      const updatedMergedTasks = mergedTasks.map((task) =>
         task.id === taskId ? { ...task, completed: !currentStatus } : task
       );
-      setTasks(updatedTasks);
 
-      // Recalculate progress after updating the task
-      recalculateProgress(updatedTasks);
+      // Filter the updated merged tasks to get unfinished tasks for display
+      setTasks(updatedMergedTasks.filter((task) => !task.completed));
+      calculateProgress(updatedMergedTasks); // Calculate progress based on merged tasks
     } catch (error) {
       console.error("Error updating task: ", error);
     }
   };
 
-  // Function to recalculate progress
-  const recalculateProgress = (updatedTasks) => {
-    const totalTasks = updatedTasks.length;
-    const completedTasks = updatedTasks.filter((task) => task.completed).length;
-    const percentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
-    setProgressPercentage(percentage);
-  };
+  const renderTaskItem = ({ item }) => (
+    <View style={styles.card}>
+      <View style={styles.taskItem}>
+        <MaterialCommunityIcons name={item.icon} size={40} color="#ff8a65" />
+        <View style={{ flex: 1, marginLeft: 10 }}>
+          <Text style={styles.taskTitle}>{item.title}</Text>
+        </View>
+        <Switch
+          thumbColor={item.completed ? "#4a90e2" : "#d9d9d9"}
+          value={item.completed}
+          onValueChange={() => handleToggleTask(item.id, item.completed)}
+        />
+      </View>
+    </View>
+  );
 
   return (
     <View style={styles.container}>

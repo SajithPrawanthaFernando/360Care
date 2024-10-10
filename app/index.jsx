@@ -22,7 +22,6 @@ import GetStarted from "../components/GetStarted";
 import SignUpPage from "../components/SignUpPage";
 import LoginPage from "../components/LoginPage";
 import Diet from "../components/DietPlanning/Diet";
-import Doctor from "../components/DoctorScheduling/Doctor";
 import Sleep from "../components/SleepTracking/Sleep";
 import DailyTips from "../components/Tipsmanaging/DailyTips";
 import Profile from "../components/Profile";
@@ -32,9 +31,67 @@ import MilestonesScreen from "../components/Tipsmanaging/MilestonesScreen";
 import AdminHome from "../components/Admin/AdminHome";
 import AddTips from "../components/Admin/AddTips";
 
+import DoctorHome from "../components/Admin/DoctorHome";
+import AddDoctor from "../components/Admin/AddDoctor";
+import DetailDoctor from "../components/Admin/DetailDoctor";
+import DoctorList from "../components/Admin/DoctorList";
+import UpdateDoctor from "../components/Admin/UpdateDoctor";
+
+import Doctor from "../components/DoctorScheduling/TopDoctors";
+import DoctorDetail from "../components/DoctorScheduling/DoctorDetail";
+import DoctorRating from "../components/DoctorScheduling/DoctorRating";
+import SortByCharges from "../components/DoctorScheduling/SortByCharges";
+import SortByLocation from "../components/DoctorScheduling/SortByLocation";
+import SortByPopularity from "../components/DoctorScheduling/SortByPopularity";
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Tstack = createNativeStackNavigator();
+const AdminTab = createBottomTabNavigator();
+const Dstack = createNativeStackNavigator();
+
+function Doctors({ user }) {
+  return (
+    <Dstack.Navigator initialRouteName="Doctor">
+      <Dstack.Screen
+        name="Doctor"
+        component={Doctor}
+        options={{ headerShown: false }}
+        initialParams={{ user }}
+      />
+      <Dstack.Screen
+        name="DoctorDetail"
+        component={DoctorDetail}
+        options={{ headerShown: false }}
+        initialParams={{ user }}
+      />
+      <Dstack.Screen
+        name="DoctorRating"
+        component={DoctorRating}
+        options={{ headerShown: false }}
+        initialParams={{ user }}
+      />
+      <Dstack.Screen
+        name="SortByCharges"
+        component={SortByCharges}
+        options={{ headerShown: false }}
+        initialParams={{ user }}
+      />
+      <Dstack.Screen
+        name="SortByLocation"
+        component={SortByLocation}
+        options={{ headerShown: false }}
+        initialParams={{ user }}
+      />
+      <Dstack.Screen
+        name="SortByPopularity"
+        component={SortByPopularity}
+        options={{ headerShown: false }}
+        initialParams={{ user }}
+      />
+    </Dstack.Navigator>
+  );
+}
 
 function TipStack({ user }) {
   return (
@@ -67,6 +124,47 @@ function TipStack({ user }) {
   );
 }
 
+function AdminTabbar({ user }) {
+  return (
+    <AdminTab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          switch (route.name) {
+            case "AdminHome":
+              iconName = focused ? "shield" : "shield-outline";
+              break;
+            case "DoctorHome":
+              iconName = focused ? "medkit" : "medkit-outline";
+              break;
+
+            default:
+              iconName = "help-circle";
+          }
+
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: "#007bff",
+        tabBarInactiveTintColor: "gray",
+      })}
+    >
+      <AdminTab.Screen
+        name="AdminHome"
+        component={AdminHome}
+        options={{ headerShown: false }}
+        initialParams={{ user }}
+      />
+      <AdminTab.Screen
+        name="DoctorHome"
+        component={DoctorHome}
+        options={{ headerShown: false }}
+        initialParams={{ user }}
+      />
+    </AdminTab.Navigator>
+  );
+}
+
 function Tabbar({ user, handleAuthentication }) {
   return (
     <Tab.Navigator
@@ -81,7 +179,7 @@ function Tabbar({ user, handleAuthentication }) {
             case "DailyTips":
               iconName = focused ? "list-circle" : "list-circle-outline";
               break;
-            case "Doctor":
+            case "Doctors":
               iconName = focused ? "medkit" : "medkit-outline";
               break;
             case "Sleep":
@@ -113,8 +211,8 @@ function Tabbar({ user, handleAuthentication }) {
         initialParams={{ user }}
       />
       <Tab.Screen
-        name="Doctor"
-        component={Doctor}
+        name="Doctors"
+        component={Doctors}
         options={{ headerShown: false }}
         initialParams={{ user }}
       />
@@ -176,7 +274,7 @@ function App() {
 
           if (email == "admin@gmail.com" && password == "Qw12345@") {
             console.log("Admin signed in successfully!");
-            navigation.navigate("AdminHome");
+            navigation.navigate("AdminTabbar");
             setEmail("");
             setPassword("");
           } else {
@@ -278,14 +376,34 @@ function App() {
         initialParams={{ user }}
       />
       <Stack.Screen
-        name="AdminHome"
-        component={AdminHome}
+        name="AdminTabbar"
+        component={AdminTabbar}
         options={{ headerShown: false }}
       />
 
       <Stack.Screen
         name="AddAdminTips"
         component={AddTips}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="AddDoctor"
+        component={AddDoctor}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DetailDoctor"
+        component={DetailDoctor}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="DoctorList"
+        component={DoctorList}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="UpdateDoctor"
+        component={UpdateDoctor}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

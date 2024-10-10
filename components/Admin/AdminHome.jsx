@@ -129,7 +129,7 @@ const AdminHome = () => {
   const displayedTips = showAllTips ? tips : tips.slice(0, 3);
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.sectionTitle}>Admin Dashboard</Text>
       <View style={styles.dashboardOverview}>
         <View style={styles.overviewCard}>
@@ -158,7 +158,22 @@ const AdminHome = () => {
         style={styles.addButton}
         onPress={() => setModalVisible(true)}
       >
-        <Text style={styles.addButtonText}>Add Task</Text>
+        <Text style={styles.addButtonText}>Add Tasks</Text>
+        <MaterialCommunityIcons
+          name="plus-circle"
+          size={20}
+          color="#fff"
+          style={styles.icon}
+        />
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => {
+          navigation.navigate("AddAdminTips");
+        }}
+      >
+        <Text style={styles.addButtonText}>Add Tips</Text>
         <MaterialCommunityIcons
           name="plus-circle"
           size={20}
@@ -182,7 +197,7 @@ const AdminHome = () => {
       </View>
 
       <FlatList
-        style={{ marginBottom: 25 }}
+        style={{ marginBottom: 15 }}
         data={displayedTips}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
@@ -283,7 +298,7 @@ const AdminHome = () => {
           style={styles.icon}
         />
       </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -437,9 +452,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
-    marginBottom: 40,
     flexDirection: "row",
-    marginTop: 30,
     justifyContent: "space-between",
   },
 });

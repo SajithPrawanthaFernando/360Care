@@ -30,6 +30,7 @@ import FocusGoalsScreen from "../components/Tipsmanaging/FocusGoalsScreen";
 import ProgressScreen from "../components/Tipsmanaging/ProgressScreen";
 import MilestonesScreen from "../components/Tipsmanaging/MilestonesScreen";
 import AdminHome from "../components/Admin/AdminHome";
+import AddTips from "../components/Admin/AddTips";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -279,6 +280,12 @@ function App() {
       <Stack.Screen
         name="AdminHome"
         component={AdminHome}
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
+        name="AddAdminTips"
+        component={AddTips}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

@@ -99,7 +99,45 @@ const Profile = () => {
     }
   };
 
+  const validatePhoneNumber = (phone) => {
+    const phoneRegex = /^0\d{9}$/; // Matches a phone number starting with 0 and followed by 9 digits
+    return phoneRegex.test(phone);
+  };
+
   const handleSave = async () => {
+    const { name, phone, address, bmi, budget, sleepHours } = editedData;
+
+    if (!validatePhoneNumber(phone)) {
+      Alert.alert(
+        "Validation Error",
+        "Phone number must be 10 digits and start with 0."
+      );
+      return;
+    }
+
+    if (
+      !name ||
+      !phone ||
+      !address ||
+      !bmi ||
+      !budget ||
+      !sleepHours ||
+      !heartRate ||
+      !calories ||
+      !weight
+    ) {
+      Alert.alert("Validation Error", "All fields are required!");
+      return;
+    }
+
+    if (isNaN(bmi) || isNaN(budget) || isNaN(sleepHours)) {
+      Alert.alert(
+        "Validation Error",
+        "BMI, Budget, and Sleep Hours must be numbers."
+      );
+      return;
+    }
+
     try {
       const user = auth.currentUser;
       if (user) {
@@ -226,6 +264,7 @@ const Profile = () => {
                   onChangeText={(text) =>
                     setEditedData({ ...editedData, name: text })
                   }
+                  required
                 />
               </View>
               <View style={styles.inputContainer}>
@@ -237,6 +276,7 @@ const Profile = () => {
                   onChangeText={(text) =>
                     setEditedData({ ...editedData, phone: text })
                   }
+                  required
                 />
               </View>
               <View style={styles.inputContainer}>
@@ -245,9 +285,8 @@ const Profile = () => {
                   style={styles.input}
                   placeholder="Email"
                   value={editedData.email}
-                  onChangeText={(text) =>
-                    setEditedData({ ...editedData, email: text })
-                  }
+                  editable={false}
+                  selectTextOnFocus={false}
                 />
               </View>
               <View style={styles.inputContainer}>
@@ -259,6 +298,7 @@ const Profile = () => {
                   onChangeText={(text) =>
                     setEditedData({ ...editedData, address: text })
                   }
+                  required
                 />
               </View>
               <View style={styles.inputContainer}>
@@ -270,6 +310,8 @@ const Profile = () => {
                   onChangeText={(text) =>
                     setEditedData({ ...editedData, bmi: text })
                   }
+                  keyboardType="numeric"
+                  required
                 />
               </View>
               <View style={styles.inputContainer}>
@@ -281,6 +323,8 @@ const Profile = () => {
                   onChangeText={(text) =>
                     setEditedData({ ...editedData, budget: text })
                   }
+                  keyboardType="numeric"
+                  required
                 />
               </View>
               <View style={styles.inputContainer}>
@@ -292,6 +336,8 @@ const Profile = () => {
                   onChangeText={(text) =>
                     setEditedData({ ...editedData, sleepHours: text })
                   }
+                  keyboardType="numeric"
+                  required
                 />
               </View>
               <View style={styles.buttonContainer}>

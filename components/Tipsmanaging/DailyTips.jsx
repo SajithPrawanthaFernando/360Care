@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
   previousTipsHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "baseline",
     marginBottom: 10,
   },
   seeAllText: {

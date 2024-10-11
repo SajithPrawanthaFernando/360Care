@@ -1,33 +1,42 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
-
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import w from "../../assets/images/w.png";
+import r from "../../assets/images/r.png";
 const WorkoutPlanPage = () => {
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            {/* Workout Image */}
-            <View style={styles.box}>
-                <Image
-                    source={{ uri: 'https://example.com/workout-image.jpg' }} // Replace with actual workout image URL
-                    style={styles.image}
-                />
-            </View>
 
-            {/* Workout Plan */}
-            <View style={styles.planContainer}>
+            {/* Workout Plan Title */}
+          
                 <Text style={styles.planTitle}>Workout Plan</Text>
-                
+
                 {/* Walking Plan */}
-                <View style={styles.planItem}>
-                    <Text style={styles.planText}>1. Walking</Text>
-                    <Text style={styles.planDetails}>30 minutes of brisk walking.</Text>
-                </View>
-                
+                <TouchableOpacity style={styles.box}>
+                    
+                        <Image source={w} style={styles.image} />
+                   
+                    <Text style={styles.boxText}>1. Walking</Text>
+                    <Text style={styles.descriptionText}>
+    A 30-minute brisk walk is an effective cardio exercise that helps improve cardiovascular fitness, 
+    strengthens muscles, and burns calories. 
+    
+</Text>
+
+                </TouchableOpacity>
+
                 {/* Stretching Plan */}
-                <View style={styles.planItem}>
-                    <Text style={styles.planText}>2. Stretching</Text>
-                    <Text style={styles.planDetails}>15 minutes of full-body stretching.</Text>
-                </View>
-            </View>
+                <TouchableOpacity style={styles.box}>
+                    
+                        <Image source={r} style={styles.image} />
+                    
+                    <Text style={styles.boxText}>2. Stretching</Text>
+                    <Text style={styles.descriptionText}>
+    A 15-minute full-body stretching routine helps improve flexibility, reduce muscle tension, and increase 
+    blood flow to your muscles. 
+</Text>
+
+                </TouchableOpacity>
+
         </ScrollView>
     );
 };
@@ -39,25 +48,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#f0f0f0',
         padding: 20,
-    },
-    box: {
-        width: '90%',
-        height: 200,
-        backgroundColor: '#ffffff',
-        borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 10,
-        elevation: 5,
-        marginBottom: 20,
-    },
-    image: {
-        width: '80%',
-        height: '100%',
-        resizeMode: 'contain',
     },
     planContainer: {
         width: '90%',
@@ -76,18 +66,39 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         textAlign: 'center',
     },
-    planItem: {
-        marginBottom: 15,
+    box: {
+        width: '90%',
+        height: 280,
+        backgroundColor: '#ffffff',
+        borderRadius: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 10,
+        elevation: 5,
+        marginBottom: 30,
+        padding: 15,
     },
-    planText: {
+    
+    image: {
+        width: '90%',
+        height: '120%',
+        resizeMode: 'contain',
+        marginTop: -100,
+    },
+    boxText: {
         fontSize: 18,
-        fontWeight: '600',
+        fontWeight: 'bold',
         color: '#333',
+        marginTop: -60,
     },
-    planDetails: {
-        fontSize: 16,
+    descriptionText: {
+        fontSize: 14,
         color: '#666',
-        marginTop: 5,
+        textAlign: 'justify',
+        paddingHorizontal: 10,
     },
 });
 

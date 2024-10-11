@@ -10,7 +10,10 @@ const BreakPlanPage = ({ navigation }) => {
             <Text style={styles.pageTitle}>Meal Break Plans</Text>
 
             {/* First box: Workout Plan */}
-            <TouchableOpacity style={styles.box} >
+            <TouchableOpacity 
+                style={styles.box} 
+                onPress={() => navigation.navigate('WorkoutPlanPage')}  // Navigate to WorkoutPage
+            >
                 <Image
                     source={w} // Local workout image
                     style={styles.image}
@@ -22,7 +25,10 @@ const BreakPlanPage = ({ navigation }) => {
             </TouchableOpacity>
 
             {/* Second box: Meal Plan */}
-            <TouchableOpacity style={styles.box} >
+            <TouchableOpacity 
+                style={styles.box} 
+                onPress={() => navigation.navigate('MealPage')}  // Navigate to MealPage
+            >
                 <Image
                     source={d} // Local diet image
                     style={styles.image}
@@ -52,7 +58,7 @@ const styles = StyleSheet.create({
     },
     box: {
         width: '90%',
-        height: 230,
+        height: 250,
         backgroundColor: '#fff',
         borderRadius: 15,
         justifyContent: 'center',
@@ -65,8 +71,8 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     image: {
-        width: '120%',
-        height: 150,
+        width: 700,
+        height: 130,
         resizeMode: 'contain',
         marginBottom: 10,
         marginTop: -40,

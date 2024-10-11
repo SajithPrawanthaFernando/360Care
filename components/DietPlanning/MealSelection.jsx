@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, Alert, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const MealSelection = ({ route }) => {
-    // Destructure the selected meals from route.params
     const { selectedBreakfast, selectedLunch, selectedDinner } = route.params;
-    const navigation = useNavigation(); // Access navigation
+    const navigation = useNavigation();
 
-    // State to store the selected meal type and level
     const [selectedMeal, setSelectedMeal] = useState('');
     const [selectedLevel, setSelectedLevel] = useState('');
 
@@ -20,14 +18,6 @@ const MealSelection = ({ route }) => {
     };
 
     const handleCalibrate = () => {
-        // Create a summary of selected meal levels
-        const calibratedMessage = `
-            ${selectedMeal}: Level - ${selectedLevel}
-        `;
-
-        // Show the selected meal levels in an alert
-        
-        // Navigate to the breakfast page (replace 'BreakfastPage' with your actual route name)
         navigation.navigate('BreakPlanPage');
     };
 
@@ -35,71 +25,80 @@ const MealSelection = ({ route }) => {
         <View style={styles.container}>
             <Text style={styles.title}>Estimate Level of Meal</Text>
 
+            {/* Add the description below the title */}
+            <Text style={styles.description}>
+                If you break your meal, what meal did you break?
+            </Text>
+
             {/* Display selected breakfast */}
             <View style={styles.mealContainer}>
-            <View style={styles.blueBox}>
                 <ImageBackground 
-                    source={selectedBreakfast.image} // Assuming this is an imported image
+                    source={selectedBreakfast.image}
                     style={styles.mealImage}
+                    imageStyle={styles.curvedImage}
                     onTouchEnd={() => handleSelectMeal('Breakfast')}
                 >
+                    <Text style={styles.mealName}>Breakfast</Text>
                     <Text style={styles.mealName}>{selectedBreakfast.name}</Text>
                 </ImageBackground>
-                </View>
             </View>
 
             {/* Display selected lunch */}
             <View style={styles.mealContainer}>
-            <View style={styles.blueBox}>
                 <ImageBackground 
-                    source={selectedLunch.image} // Assuming this is an imported image
+                    source={selectedLunch.image}
                     style={styles.mealImage}
+                    imageStyle={styles.curvedImage}
                     onTouchEnd={() => handleSelectMeal('Lunch')}
                 >
+                    <Text style={styles.mealName}>Lunch</Text>
                     <Text style={styles.mealName}>{selectedLunch.name}</Text>
                 </ImageBackground>
-                </View>
             </View>
 
             {/* Display selected dinner */}
             <View style={styles.mealContainer}>
-            <View style={styles.blueBox}>
                 <ImageBackground 
-                    source={selectedDinner.image} // Assuming this is an imported image
+                    source={selectedDinner.image}
                     style={styles.mealImage}
+                    imageStyle={styles.curvedImage}
                     onTouchEnd={() => handleSelectMeal('Dinner')}
                 >
-                    
+                     <Text style={styles.mealName}>Dinner</Text>
+                    <Text style={styles.mealName}>{selectedDinner.name}</Text>
                 </ImageBackground>
-                <Text style={styles.mealName}>{selectedDinner.name}</Text>
-                </View>
             </View>
 
             {/* Level selection buttons */}
             <View style={styles.buttonContainer}>
-                <Button
-                    title="Low"
+                <TouchableOpacity
+                    style={[styles.levelButton, { backgroundColor: selectedLevel === 'Low' ? 'red' : 'gray' }]}
                     onPress={() => handleSelectLevel('Low')}
-                    color={ 'Low' ? 'red' : 'gray'}
-                />
-                <Button
-                    title="Mid"
+                >
+                    <Text style={styles.buttonText}>low</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[styles.levelButton, { backgroundColor: selectedLevel === 'Mid' ? 'yellow' : 'gray' }]}
                     onPress={() => handleSelectLevel('Mid')}
-                    color={ 'Mid' ? 'yellow' : 'gray'}
-                />
-                <Button
-                    title="High"
+                >
+                    <Text style={styles.buttonText}>mid</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[styles.levelButton, { backgroundColor: selectedLevel === 'High' ? 'green' : 'gray' }]}
                     onPress={() => handleSelectLevel('High')}
-                    color={ 'High' ? 'green' : 'gray'}
-                />
+                >
+                    <Text style={styles.buttonText}>high</Text>
+                </TouchableOpacity>
             </View>
 
             {/* Calibrate button */}
-            <Button
-                title="Calibrate"
+            <TouchableOpacity
+                style={styles.calibrateButton}
                 onPress={handleCalibrate}
-                 // Disable if no level or meal is selected
-            />
+                disabled={!selectedMeal || !selectedLevel}
+            >
+                <Text style={styles.buttonText}>calibrate</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -113,39 +112,58 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
+        marginBottom: 10,
         textAlign: 'center',
+    },
+    description: {
+        fontSize: 16,
+        textAlign: 'center',
+        color: '#555',
+        marginBottom: 20,
     },
     mealContainer: {
         flex: 1,
-        marginLeft: 1, // Space between meal image and details
-        borderRadius: 15,
-        overflow: 'hidden',
+        marginBottom: 20,
     },
     mealName: {
         textAlign: 'center',
         fontSize: 20,
-        color: '#fff', 
-      
-        // White text for contrast
+        color: '#000000',
+        marginTop: 5,
+        backgroundColor:'#fff',
+        fontWeight:'600',
     },
     mealImage: {
-        height: 100,
-        width:100,
+        height: 150,
         justifyContent: 'center',
-        alignItems: 'center', // Circular image
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    curvedImage: {
+        borderRadius: 15,
     },
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         marginVertical: 20,
     },
-    blueBox: {
-        backgroundColor: '#007bff', // Blue background for details
-        borderRadius: 10,
-        padding: 10,
-        justifyContent: 'center',
-        height:120,
+    levelButton: {
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 30,
+        marginHorizontal: 10,
+    },
+    buttonText: {
+        fontSize: 18,
+        color: '#fff',
+        textTransform: 'lowercase',
+        textAlign: 'center',
+    },
+    calibrateButton: {
+        backgroundColor: 'blue',
+        paddingVertical: 15,
+        borderRadius: 30,
+        marginTop: 20,
     },
 });
 

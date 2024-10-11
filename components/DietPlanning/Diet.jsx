@@ -13,12 +13,17 @@ import Eggs from "../../assets/images/Eggs.jpeg";
 import curry from "../../assets/images/curry.jpeg";
 import chicken from "../../assets/images/chicken.jpeg";
 import Vegetable from "../../assets/images/Vegetable.jpeg";
-import soup from "../../assets/images/soup";
-import chickpea from "../../assets/images/chickpea";
+import soup from "../../assets/images/soup.jpeg";
+import chickpea from "../../assets/images/chickpea.jpeg";
+import fruits from "../../assets/images/fruits.jpeg";
+import fish from "../../assets/images/fish.jpeg";
+import pasta from "../../assets/images/pasta.jpeg";
+import sl from "../../assets/images/sl.jpeg"
+import v from "../../assets/images/v.jpeg";
 const mealDatabase = {
     breakfast: [
         { name: 'Oats', image: Oats, minBudget: 1000, maxBudget: 5000, bmiRange: [4.0, 5.0],calories: 250 ,budget:400},
-        { name: 'Fruits', image: diet, minBudget: 1000, maxBudget: 5000, bmiRange: [4.0, 5.0],calories: 250 ,budget:1000 },
+        { name: 'Fruits', image: fruits, minBudget: 1000, maxBudget: 5000, bmiRange: [4.0, 5.0],calories: 250 ,budget:1000 },
         { name: 'Yogurt', image: yogurt, minBudget: 1200, maxBudget: 4500, bmiRange: [3.5, 4.8],calories: 250 ,budget:100 },
         { name: 'Avocado Toast', image: Avocado, minBudget: 1500, maxBudget: 6000, bmiRange: [4.2, 5.0] ,calories: 250 ,budget:400},
         { name: 'Smoothie Bowl', image: Smoothie, minBudget: 1300, maxBudget: 5500, bmiRange: [4.0, 5.0],calories: 250 ,budget:500 },
@@ -26,17 +31,17 @@ const mealDatabase = {
       ],
       lunch: [
         { name: 'Rice and Curry', image: curry, minBudget: 1000, maxBudget: 5000, bmiRange: [4.0, 5.0],calories: 250 ,budget:500 },
-        { name: 'Pasta', image: diet, minBudget: 3000, maxBudget: 5000, bmiRange: [4.0, 4.5] ,calories: 250 ,budget:500},
+        { name: 'Pasta', image: pasta, minBudget: 3000, maxBudget: 5000, bmiRange: [4.0, 4.5] ,calories: 250 ,budget:500},
         { name: 'Grilled Chicken Salad', image: chicken, minBudget: 2500, maxBudget: 6000, bmiRange: [4.0, 5.0],calories: 250 ,budget:500 },
         { name: 'Quinoa Bowl', image: diet, minBudget: 2200, maxBudget: 6500, bmiRange: [4.0, 4.8],calories: 250 ,budget:500 },
         { name: 'Veggie Stir Fry', image: Vegetable, minBudget: 1500, maxBudget: 5000, bmiRange: [3.8, 5.0] ,calories: 250 ,budget:500},
-        { name: 'Fish Tacos', image: diet, minBudget: 3000, maxBudget: 7000, bmiRange: [4.0, 5.0] ,calories: 250 ,budget:500},
+        { name: 'Fish Tacos', image: fish, minBudget: 3000, maxBudget: 7000, bmiRange: [4.0, 5.0] ,calories: 250 ,budget:500},
       ],
       dinner: [
         { name: 'Soup', image: soup, minBudget: 1000, maxBudget: 5000, bmiRange: [4.0, 5.0],calories: 250 ,budget:500 },
-        { name: 'Salad', image: diet, minBudget: 2000, maxBudget: 5000, bmiRange: [4.0, 5.0] ,calories: 250 ,budget:500},
-        { name: 'Grilled Salmon', image: diet, minBudget: 4000, maxBudget: 8000, bmiRange: [4.2, 5.0],calories: 250 ,budget:500 },
-        { name: 'Vegetable Curry', image: diet, minBudget: 1500, maxBudget: 4000, bmiRange: [4.0, 5.0] ,calories: 250 ,budget:500},
+        { name: 'Salad', image: sl, minBudget: 2000, maxBudget: 5000, bmiRange: [4.0, 5.0] ,calories: 250 ,budget:500},
+        { name: 'Grilled Salmon', image: fish, minBudget: 4000, maxBudget: 8000, bmiRange: [4.2, 5.0],calories: 250 ,budget:500 },
+        { name: 'Vegetable Curry', image: v, minBudget: 1500, maxBudget: 4000, bmiRange: [4.0, 5.0] ,calories: 250 ,budget:500},
         { name: 'Stuffed Bell Peppers', image: diet, minBudget: 2500, maxBudget: 6000, bmiRange: [4.0, 4.7] ,calories: 250 ,budget:500},
         { name: 'Chickpea Stew', image: chickpea, minBudget: 1800, maxBudget: 5000, bmiRange: [3.9, 5.0] ,calories: 250 ,budget:500},
       ],
@@ -266,11 +271,12 @@ const styles = StyleSheet.create({
     borderRadius: 15, // Apply border radius to the image
   },
   mealName: {
-    fontSize: 18,
-    color: '#fff', // White text for the meal name inside the image
+    fontSize: 19,
+    color: '#000000', // White text for the meal name inside the image
     fontWeight: 'bold',
     paddingHorizontal: 5,
     paddingVertical: 2,
+    backgroundColor:'#fff',
   },
   mealTitle: {
     fontSize: 22,

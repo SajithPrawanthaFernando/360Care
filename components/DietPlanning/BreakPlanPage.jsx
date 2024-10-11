@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         fontSize: 24, // Adjust the font size for the title
         fontWeight: 'bold',
         color: '#333',
-        marginBottom: 20, // Space below the title
+        marginBottom: 60, // Space below the title
     },
     box: {
         width: '90%',
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 60,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,

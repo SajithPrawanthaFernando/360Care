@@ -134,10 +134,10 @@ const styles = StyleSheet.create({
         fontWeight:'600',
     },
     mealImage: {
-        height: 150,
+        height: 140,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 10,
+        marginBottom: 20,
     },
     curvedImage: {
         borderRadius: 15,

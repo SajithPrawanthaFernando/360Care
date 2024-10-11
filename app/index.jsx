@@ -72,12 +72,12 @@ function Dietst({ user }) {
         component={SelectedMeals}
         options={{ headerShown: false }}
       />
-       <Tstack.Screen
+      <Tstack.Screen
         name="MealSummary"
         component={MealSummary}
         options={{ headerShown: false }}
       />
-       <Tstack.Screen
+      <Tstack.Screen
         name="MealSelection"
         component={MealSelection}
         options={{ headerShown: false }}
@@ -87,7 +87,7 @@ function Dietst({ user }) {
         component={BreakPlanPage}
         options={{ headerShown: false }}
       />
-       <Tstack.Screen
+      <Tstack.Screen
         name="Crud"
         component={Crud}
         options={{ headerShown: false }}
@@ -97,14 +97,11 @@ function Dietst({ user }) {
         component={WorkoutPlanPage}
         options={{ headerShown: false }}
       />
-       <Tstack.Screen
-      name="MealPage"
-      component={MealPage}
-      options={{ headerShown: false }}
-    />
-      
-      
-
+      <Tstack.Screen
+        name="MealPage"
+        component={MealPage}
+        options={{ headerShown: false }}
+      />
     </Tstack.Navigator>
   );
 }
@@ -232,7 +229,7 @@ function Tabbar({ user, handleAuthentication }) {
           let iconName;
 
           switch (route.name) {
-            case "Diet":
+            case "Dietst":
               iconName = focused ? "nutrition" : "nutrition-outline";
               break;
             case "DailyTips":
@@ -258,8 +255,8 @@ function Tabbar({ user, handleAuthentication }) {
       })}
     >
       <Tab.Screen
-        name="Diet"
-        component={Diet}
+        name="Dietst"
+        component={Dietst}
         options={{ headerShown: false }}
         initialParams={{ user }}
       />

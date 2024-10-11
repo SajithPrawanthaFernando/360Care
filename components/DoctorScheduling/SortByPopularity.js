@@ -196,7 +196,9 @@ const SortByPopularity = () => {
                     <TouchableOpacity
                       style={styles.infoButton}
                       onPress={() =>
-                        router.push("DoctorDetail", { doctorId: item.id })
+                        navigation.navigate("DoctorDetail", {
+                          doctorId: item.id,
+                        })
                       } // Pass doctor ID to DoctorDetail page
                     >
                       <Ionicons

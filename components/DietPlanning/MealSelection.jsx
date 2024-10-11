@@ -27,7 +27,7 @@ const MealSelection = ({ route }) => {
 
             {/* Add the description below the title */}
             <Text style={styles.description}>
-                If you break your meal, what meal did you break?
+                If you break your meal Plan, what meal did you break?
             </Text>
 
             {/* Display selected breakfast */}
@@ -68,7 +68,9 @@ const MealSelection = ({ route }) => {
                     <Text style={styles.mealName}>{selectedDinner.name}</Text>
                 </ImageBackground>
             </View>
-
+            <Text style={styles.description}>
+             Select Estimate Level of Meal
+            </Text>
             {/* Level selection buttons */}
             <View style={styles.buttonContainer}>
                 <TouchableOpacity

@@ -44,11 +44,55 @@ import SortByCharges from "../components/DoctorScheduling/SortByCharges";
 import SortByLocation from "../components/DoctorScheduling/SortByLocation";
 import SortByPopularity from "../components/DoctorScheduling/SortByPopularity";
 
+
+import SelectedMeals from "../components/DietPlanning/SelectedMeals";
+import MealSummary from "../components/DietPlanning/MealSummary";
+import MealSelection from "../components/DietPlanning/MealSelection";
+import BreakPlanPage from "../components/DietPlanning/BreakPlanPage";
+import Crud from "../components/DietPlanning/crud";
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const Tstack = createNativeStackNavigator();
 const AdminTab = createBottomTabNavigator();
 const Dstack = createNativeStackNavigator();
+function Dietst({ user }) {
+  return (
+    <Tstack.Navigator initialRouteName="Diet">
+      <Tstack.Screen
+        name="Diet"
+        component={Diet}
+        options={{ headerShown: false }}
+        initialParams={{ user }}
+      />
+      <Tstack.Screen
+        name="SelectedMeals"
+        component={SelectedMeals}
+        options={{ headerShown: false }}
+      />
+       <Tstack.Screen
+        name="MealSummary"
+        component={MealSummary}
+        options={{ headerShown: false }}
+      />
+       <Tstack.Screen
+        name="MealSelection"
+        component={MealSelection}
+        options={{ headerShown: false }}
+      />
+      <Tstack.Screen
+        name="BreakPlanPage"
+        component={BreakPlanPage}
+        options={{ headerShown: false }}
+      />
+       <Tstack.Screen
+        name="Crud"
+        component={Crud}
+        options={{ headerShown: false }}
+      />
+    </Tstack.Navigator>
+  );
+}
 
 function Doctors({ user }) {
   return (

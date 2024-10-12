@@ -29,6 +29,8 @@ import Profile from "../components/Profile";
 import FocusGoalsScreen from "../components/Tipsmanaging/FocusGoalsScreen";
 import ProgressScreen from "../components/Tipsmanaging/ProgressScreen";
 import MilestonesScreen from "../components/Tipsmanaging/MilestonesScreen";
+import SleepInfo from "../components/SleepTracking/SleepInfo";
+import TrackSleep from "../components/SleepTracking/TrackSleep";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -58,6 +60,30 @@ function TipStack({ user }) {
       <Tstack.Screen
         name="MilestonesScreen"
         component={MilestonesScreen}
+        options={{ headerShown: false }}
+        initialParams={{ user }}
+      />
+    </Tstack.Navigator>
+  );
+}
+function SleepStack({ user }) {
+  return (
+    <Tstack.Navigator initialRouteName="Sleep">
+      <Tstack.Screen
+        name="Sleep"
+        component={Sleep}
+        options={{ headerShown: false }}
+        initialParams={{ user }}
+      />
+      <Tstack.Screen
+        name="SleepInfo"
+        component={SleepInfo}
+        options={{ headerShown: false }}
+        initialParams={{ user }}
+      />
+      <Tstack.Screen
+        name="TrackSleep"
+        component={TrackSleep}
         options={{ headerShown: false }}
         initialParams={{ user }}
       />
@@ -118,7 +144,7 @@ function Tabbar({ user, handleAuthentication }) {
       />
       <Tab.Screen
         name="Sleep"
-        component={Sleep}
+        component={SleepStack}
         options={{ headerShown: false }}
         initialParams={{ user }}
       />
@@ -207,7 +233,7 @@ function App() {
   };
 
   return (
-    <Stack.Navigator initialRouteName="Splash">
+    <Stack.Navigator initialRouteName="Sleep">
       <Stack.Screen
         name="Splash"
         component={SplashScreen}
